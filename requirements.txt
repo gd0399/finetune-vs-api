@@ -1,0 +1,6 @@
+# core: data generation, scoring, cost model, report, API eval
+numpy
+matplotlib
+requests
+anthropic
+pytest

@@ -1,0 +1,7 @@
+# GPU box: training + serving. Install vLLM first; it pins a compatible torch/transformers.
+# Training code was tested with transformers 5.22 and peft 0.21.
+vllm
+peft>=0.21
+bitsandbytes
+accelerate
+-r requirements.txt
