@@ -1,0 +1,1 @@
+{"label": "sonnet-5.5", "spec": "anthropic:claude-sonnet-5-5", "split": "test_id", "n": 300, "workers": 8, "wall_s": 97.75433281699998, "docs_per_hour": 11048.10363773648}

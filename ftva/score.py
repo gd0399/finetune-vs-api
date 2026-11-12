@@ -52,12 +52,45 @@ def _get(d, field):
     return d.get(field)
 
 
-def _items(field, obj):
+# ICD-10-CM combination codes. The coding guidelines presume a link between hypertension and
+# CKD / heart failure (I.C.9.a) and between diabetes and conditions listed under "with" (I.A.15),
+# so a coder must use the combination code. When the companion condition really is in the note,
+# the combination code counts as the gold code(s) it replaces.
+COMBINATIONS = [
+    # (predicted code, companions that must be in gold, gold codes it stands for)
+    ("I13.0", {"N18.31", "I50.9"}, {"I10"}),
+    ("I13.10", {"N18.31"}, {"I10"}),
+    ("I12.9", {"N18.31"}, {"I10"}),
+    ("I11.0", {"I50.9"}, {"I10"}),
+    ("E11.22", {"N18.31"}, {"E11.9"}),
+    ("E11.42", {"G62.9"}, {"E11.9", "G62.9"}),
+    ("E11.40", {"G62.9"}, {"E11.9", "G62.9"}),
+    # the generated chief complaint for allergic rhinitis says "seasonal", so J30.2 is defensible
+    ("J30.2", set(), {"J30.9"}),
+]
+
+
+def _canon_dx(pred_codes: set, gold_codes: set) -> set:
+    out = set()
+    for c in pred_codes:
+        for code, needs, means in COMBINATIONS:
+            if c == code and needs <= gold_codes and means <= gold_codes:
+                out |= means
+                break
+        else:
+            out.add(c)
+    return out
+
+
+def _items(field, obj, gold_codes: set | None = None):
     """Turn a list field into a set of comparable keys."""
     xs = obj.get(field) if isinstance(obj, dict) else None
     if not isinstance(xs, list):
         return set()
     out = set()
+    if field == "diagnoses":
+        codes = {str(x.get("icd10", "")).upper().strip() for x in xs if isinstance(x, dict)}
+        return _canon_dx(codes, gold_codes) if gold_codes is not None else codes
     for x in xs:
         if field == "diagnoses" and isinstance(x, dict):
             out.add(str(x.get("icd10", "")).upper().strip())
@@ -73,8 +106,10 @@ def score_doc(gold: dict, pred: dict | None) -> dict:
     r = {"valid_json": pred is not None, "fields": {}, "lists": {}}
     for f in SCALARS:
         r["fields"][f] = pred is not None and _scalar_ok(f, _get(gold, f), _get(pred, f))
+    gold_codes = _items("diagnoses", gold)
     for f in LISTS:
-        g, p = _items(f, gold), _items(f, pred or {})
+        g = _items(f, gold)
+        p = _items(f, pred or {}, gold_codes if f == "diagnoses" else None)
         r["lists"][f] = {"tp": len(g & p), "fp": len(p - g), "fn": len(g - p),
                          "exact": g == p, "gold": g, "pred": p}
         r["fields"][f] = g == p

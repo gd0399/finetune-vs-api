@@ -109,10 +109,12 @@ def markdown(res) -> str:
         L.append(f"| {m['label']} | {_fmt(g('icd10_seen'))} | {_fmt(g('icd10_heldout'))} | {_fmt(g('meds_seen'))} | "
                  f"{_fmt(g('meds_heldout'))} | {o['false_positive_items_per_doc']:.2f} |")
     L += ["", "## Cost and speed", "",
-          "| model | pricing | cost / 1,000 notes | mean tokens in / out | latency p50 / p95 | notes / hour |",
-          "|---|---|---|---|---|---|"]
+          "| model | pricing | cost / 1,000 notes | cost / 1,000 *correct* notes (OOD) | mean tokens in / out | latency p50 / p95 | notes / hour |",
+          "|---|---|---|---|---|---|---|"]
     for m in M.values():
-        L.append(f"| {m['label']} | {m['pricing'] or '—'} | {_fmt(m['cost_per_1k'], 'usd')} | "
+        em = m["splits"].get("test_ood", {}).get("exact_match")
+        cpc = m["cost_per_1k"] / em if m["cost_per_1k"] is not None and em else None
+        L.append(f"| {m['label']} | {m['pricing'] or '—'} | {_fmt(m['cost_per_1k'], 'usd')} | {_fmt(cpc, 'usd')} | "
                  f"{m['mean_input_tokens']:.0f} / {m['mean_output_tokens']:.0f} | "
                  f"{_fmt(m['latency_p50'], 's')} / {_fmt(m['latency_p95'], 's')} | {_fmt(m['docs_per_hour'], 'int')} |")
     L += ["", "## When does self-hosting beat the API?", ""]
@@ -146,17 +148,18 @@ def charts(res, out_dir):
         ax.grid(axis="y", color=GRID); ax.set_axisbelow(True)
 
     # 1. exact match, in-distribution vs out-of-distribution
-    fig, ax = plt.subplots(figsize=(8, 4.5), facecolor=BG)
+    fig, ax = plt.subplots(figsize=(8, 5), facecolor=BG)
     style(ax, "Exact-match accuracy: familiar notes vs unfamiliar notes")
     x = np.arange(len(M)); w = 0.38
     for k, (sp, name) in enumerate([("test_id", "Familiar styles (ID)"), ("test_ood", "New styles + unseen terms (OOD)")]):
         vals = [m["splits"].get(sp, {}).get("exact_match", 0) for m in M]
         bars = ax.bar(x + (k - 0.5) * w, vals, w * 0.95, color=COLORS[k], label=name)
         for b, v in zip(bars, vals):
-            ax.text(b.get_x() + b.get_width() / 2, v + 0.01, f"{v:.0%}", ha="center", fontsize=9, color=INK2)
-    ax.set_xticks(x, [m["label"] for m in M]); ax.set_ylim(0, 1.1)
+            lab = f"{v:.1%}" if 0.995 <= v < 1 else f"{v:.0%}"   # never round 99.7% up to "100%"
+            ax.text(b.get_x() + b.get_width() / 2, v + 0.01, lab, ha="center", fontsize=9, color=INK2)
+    ax.set_xticks(x, [m["label"] for m in M]); ax.set_ylim(0, 1.12)
     ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0))
-    ax.legend(frameon=False, loc="upper right", fontsize=9)
+    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=2, fontsize=9)
     fig.tight_layout(); fig.savefig(out / "accuracy.png", dpi=160); plt.close(fig)
 
     # 2. daily cost vs volume, with break-even points
@@ -166,7 +169,7 @@ def charts(res, out_dir):
     A = res["assumptions"]
     vol = np.logspace(2, 7, 400)
     fig, ax = plt.subplots(figsize=(8, 4.8), facecolor=BG)
-    style(ax, "Cost per day vs notes per day")
+    style(ax, f"Cost per day vs notes per day (GPU at ${A['gpu_hourly_usd']:.2f}/hour)")
     # self-hosted models with ~the same throughput have the same cost line: draw it once
     gpu_groups = {}
     for m in priced:
@@ -192,7 +195,7 @@ def charts(res, out_dir):
     ax.set_xlabel("Notes per day", color=INK2); ax.set_ylabel("USD per day", color=INK2)
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"${v:,.0f}" if v >= 1 else f"${v:g}"))
     ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{v:,.0f}"))
-    ax.legend(frameon=False, fontsize=9)
+    ax.legend(frameon=False, fontsize=9, loc="lower right")
     fig.tight_layout(); fig.savefig(out / "break_even.png", dpi=160); plt.close(fig)
 
 

@@ -1,0 +1,1 @@
+{"label": "haiku-5.5", "spec": "anthropic:claude-haiku-5-5", "split": "test_ood", "n": 300, "workers": 8, "wall_s": 111.64353404099984, "docs_per_hour": 9673.645762623226}

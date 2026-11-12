@@ -173,3 +173,27 @@ def test_sft_masks_prompt_and_learns_answer():
         assert tok.decode(learned) == target(r["label"]) + end_token(tok)
         n_prompt = item["labels"].count(-100)
         assert "<think>\n\n</think>" in tok.decode(item["input_ids"][:n_prompt])
+
+
+# ---------------- ICD-10-CM combination codes
+def _with_dx(codes):
+    g = json.loads(target(_gold()))
+    g["diagnoses"] = [{"name": c, "icd10": c} for c in codes]
+    return g
+
+
+def test_combination_code_accepted_when_companion_present():
+    g = _with_dx(["I10", "N18.31"])
+    assert score_doc(g, _with_dx(["I12.9", "N18.31"]))["fields"]["diagnoses"]
+    g = _with_dx(["E11.9", "G62.9"])
+    assert score_doc(g, _with_dx(["E11.42"]))["fields"]["diagnoses"]
+
+
+def test_combination_code_rejected_without_companion():
+    g = _with_dx(["I10"])                      # no kidney disease in the note
+    r = score_doc(g, _with_dx(["I12.9"]))
+    assert not r["fields"]["diagnoses"] and r["lists"]["diagnoses"]["fp"] == 1
+
+
+def test_invalid_codes_still_wrong():
+    assert not score_doc(_with_dx(["M81.0"]), _with_dx(["M81.9"]))["fields"]["diagnoses"]

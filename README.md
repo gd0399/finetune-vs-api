@@ -12,7 +12,33 @@ A fine-tuned 8B open model vs frontier APIs on one narrow, realistic task: **pul
 All four get the **same prompt**. They're compared on accuracy, cost per 1,000 notes, p50/p95 latency, and the
 **daily volume at which renting a GPU becomes cheaper than paying per token**.
 
-> Results: _run the notebook, then paste `results/REPORT.md` and the two charts here._
+## Results (Nov 2026, Qwen3-8B QLoRA on one A100)
+
+| Model | Exact match: familiar notes | Exact match: new styles + unseen terms | Cost / 1,000 notes |
+|---|---|---|---|
+| Qwen3-8B, untuned | 17.7% | 19.7% | $0.08* |
+| **Qwen3-8B, fine-tuned** | **99.7%** | **15.7%** | $0.06* |
+| Claude Haiku 5.5 | 94.3% | 96.0% | $0.38 |
+| Claude Sonnet 5.5 | 93.0% | 97.3% | $4.99 |
+
+\* self-hosted cost assumes the GPU is fully busy (~57,000 notes/hour measured with vLLM). An always-on A100 at
+$3.52/hour beats **Sonnet above ~17,000 notes/day** and **Haiku only above ~220,000 notes/day**.
+
+**The fine-tuned model learned the format, not the task.** It was near-perfect on notes like its training data and
+fell to 16% on new ones, below the untuned model:
+- it copied Celsius temperatures as Fahrenheit in 205 of 240 Celsius notes (training never contained Celsius);
+- it got only 36% of never-seen ICD-10 codes right (e.g. carpal tunnel: G56.90 instead of G56.00).
+
+Other findings: Haiku 5.5 bills ~620 output tokens per note for ~200 visible ones (hidden reasoning), and on 3 notes
+Haiku/Sonnet looped on one diagnosis until the 1,024-token cap. Full tables: [`results/REPORT.md`](results/REPORT.md).
+
+![accuracy](results/accuracy.png)
+![break-even](results/break_even.png)
+
+**A bug I caught in my own labels.** ICD-10-CM requires combination codes when hypertension or diabetes occurs with
+kidney disease or neuropathy (e.g. I12.9, E11.22, E11.42), and the Claude models used them. My generator didn't, so
+the scorer now accepts a combination code *only when the companion condition is in the note*. This raised Haiku's
+familiar-notes score from 89.3% to 94.3%; no other conclusion changed.
 
 ## The task
 Each note becomes JSON: age, sex, chief complaint, diagnoses with **ICD-10-CM codes**, current medications
@@ -32,7 +58,8 @@ The data is synthetic (no patient data anywhere) but built so a fine-tuned model
 - **No leakage.** No test note is identical to a training note, and tests check that distractors never enter labels.
 
 ## Scoring
-13 fields per note. Scalars are right or wrong (temperature within ±0.2 °F, because Celsius notes round-trip with
+13 fields per note. ICD-10-CM combination codes (I12.9, E11.22, E11.42, ...) count as correct when the
+companion condition is in the note. Scalars are right or wrong (temperature within ±0.2 °F, because Celsius notes round-trip with
 rounding). Diagnoses are matched by ICD-10 code, medications by (name, dose, frequency), allergies by name; list
 fields also get precision, recall and F1. **Exact match** means every field is right. Invalid JSON scores zero.
 
@@ -52,7 +79,7 @@ pip install -r requirements.txt
 python -m ftva.cli generate
 python -m ftva.cli eval --spec mock:0.05 --label mock
 python -m ftva.cli report
-python -m pytest -q tests        # 26 tests
+python -m pytest -q tests        # 29 tests
 ```
 
 **The real experiment:** open `notebooks/run_on_gpu.ipynb` on a 24 GB+ GPU (L4, A10G or A100; Colab Pro or
@@ -81,6 +108,7 @@ ftva/costs.py       API vs GPU cost and break-even
 ftva/report.py      REPORT.md, summary.json, charts
 train/              QLoRA training and adapter merge
 tests/              generator, scoring, costs, loss masking, both backends (against a fake server)
+make_video.py       renders the results clip from results/
 ```
 
 ## Limitations

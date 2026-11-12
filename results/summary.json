@@ -1,0 +1,523 @@
+{
+  "models": {
+    "haiku-5.5": {
+      "label": "haiku-5.5",
+      "splits": {
+        "test_id": {
+          "n": 300,
+          "valid_json": 1.0,
+          "exact_match": 0.9433333333333334,
+          "field_accuracy": {
+            "age": 1.0,
+            "sex": 1.0,
+            "chief_complaint": 0.9966666666666667,
+            "smoking_status": 1.0,
+            "follow_up_weeks": 1.0,
+            "bp_systolic": 1.0,
+            "bp_diastolic": 1.0,
+            "heart_rate": 1.0,
+            "temperature_f": 1.0,
+            "spo2": 1.0,
+            "diagnoses": 0.9466666666666667,
+            "medications": 1.0,
+            "allergies": 1.0
+          },
+          "list_f1": {
+            "diagnoses": {
+              "precision": 0.9751243781094527,
+              "recall": 0.9832775919732442,
+              "f1": 0.9791840133222315
+            },
+            "medications": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "allergies": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "mean_field_accuracy": 0.9956410256410256,
+          "recall_by_vocab": {
+            "icd10_seen": {
+              "recall": 0.9832775919732442,
+              "n": 598
+            },
+            "meds_seen": {
+              "recall": 1.0,
+              "n": 594
+            }
+          },
+          "false_positive_items_per_doc": 0.05,
+          "errors": 0
+        },
+        "test_ood": {
+          "n": 300,
+          "valid_json": 0.9933333333333333,
+          "exact_match": 0.96,
+          "field_accuracy": {
+            "age": 0.9933333333333333,
+            "sex": 0.9933333333333333,
+            "chief_complaint": 0.9933333333333333,
+            "smoking_status": 0.9933333333333333,
+            "follow_up_weeks": 0.9933333333333333,
+            "bp_systolic": 0.9933333333333333,
+            "bp_diastolic": 0.9933333333333333,
+            "heart_rate": 0.9933333333333333,
+            "temperature_f": 0.9933333333333333,
+            "spo2": 0.9933333333333333,
+            "diagnoses": 0.9633333333333334,
+            "medications": 0.99,
+            "allergies": 0.9966666666666667
+          },
+          "list_f1": {
+            "diagnoses": {
+              "precision": 0.9850746268656716,
+              "recall": 0.9753694581280788,
+              "f1": 0.9801980198019801
+            },
+            "medications": {
+              "precision": 0.9984025559105432,
+              "recall": 0.9904912836767037,
+              "f1": 0.9944311853619731
+            },
+            "allergies": {
+              "precision": 1.0,
+              "recall": 0.9928057553956835,
+              "f1": 0.996389891696751
+            }
+          },
+          "mean_field_accuracy": 0.991025641025641,
+          "recall_by_vocab": {
+            "icd10_heldout": {
+              "recall": 0.9849056603773585,
+              "n": 265
+            },
+            "icd10_seen": {
+              "recall": 0.9680232558139535,
+              "n": 344
+            },
+            "meds_seen": {
+              "recall": 0.9846153846153847,
+              "n": 390
+            },
+            "meds_heldout": {
+              "recall": 1.0,
+              "n": 241
+            }
+          },
+          "false_positive_items_per_doc": 0.03333333333333333,
+          "errors": 0
+        }
+      },
+      "mean_input_tokens": 727.665,
+      "mean_output_tokens": 622.5583333333333,
+      "latency_p50": 2.8302346284999658,
+      "latency_p95": 3.9274750960501468,
+      "docs_per_hour": 9834.921125986319,
+      "pricing": "api:claude-haiku-5-5",
+      "cost_per_1k": 0.3840456666666667
+    },
+    "qwen3-8b-base": {
+      "label": "qwen3-8b-base",
+      "splits": {
+        "test_id": {
+          "n": 300,
+          "valid_json": 1.0,
+          "exact_match": 0.17666666666666667,
+          "field_accuracy": {
+            "age": 1.0,
+            "sex": 1.0,
+            "chief_complaint": 1.0,
+            "smoking_status": 1.0,
+            "follow_up_weeks": 0.99,
+            "bp_systolic": 1.0,
+            "bp_diastolic": 1.0,
+            "heart_rate": 1.0,
+            "temperature_f": 0.9966666666666667,
+            "spo2": 1.0,
+            "diagnoses": 0.22333333333333333,
+            "medications": 0.89,
+            "allergies": 0.95
+          },
+          "list_f1": {
+            "diagnoses": {
+              "precision": 0.4500875656742557,
+              "recall": 0.4297658862876254,
+              "f1": 0.4396920444824637
+            },
+            "medications": {
+              "precision": 0.936026936026936,
+              "recall": 0.936026936026936,
+              "f1": 0.936026936026936
+            },
+            "allergies": {
+              "precision": 0.94140625,
+              "recall": 1.0,
+              "f1": 0.9698189134808853
+            }
+          },
+          "mean_field_accuracy": 0.926923076923077,
+          "recall_by_vocab": {
+            "icd10_seen": {
+              "recall": 0.4297658862876254,
+              "n": 598
+            },
+            "meds_seen": {
+              "recall": 0.936026936026936,
+              "n": 594
+            }
+          },
+          "false_positive_items_per_doc": 1.1733333333333333,
+          "errors": 0
+        },
+        "test_ood": {
+          "n": 300,
+          "valid_json": 1.0,
+          "exact_match": 0.19666666666666666,
+          "field_accuracy": {
+            "age": 1.0,
+            "sex": 1.0,
+            "chief_complaint": 1.0,
+            "smoking_status": 0.9833333333333333,
+            "follow_up_weeks": 0.99,
+            "bp_systolic": 1.0,
+            "bp_diastolic": 1.0,
+            "heart_rate": 1.0,
+            "temperature_f": 0.86,
+            "spo2": 1.0,
+            "diagnoses": 0.23666666666666666,
+            "medications": 0.9566666666666667,
+            "allergies": 1.0
+          },
+          "list_f1": {
+            "diagnoses": {
+              "precision": 0.46677740863787376,
+              "recall": 0.4614121510673235,
+              "f1": 0.4640792733278282
+            },
+            "medications": {
+              "precision": 0.9762282091917591,
+              "recall": 0.9762282091917591,
+              "f1": 0.9762282091917591
+            },
+            "allergies": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "mean_field_accuracy": 0.9251282051282051,
+          "recall_by_vocab": {
+            "icd10_heldout": {
+              "recall": 0.4339622641509434,
+              "n": 265
+            },
+            "icd10_seen": {
+              "recall": 0.48255813953488375,
+              "n": 344
+            },
+            "meds_seen": {
+              "recall": 0.9743589743589743,
+              "n": 390
+            },
+            "meds_heldout": {
+              "recall": 0.979253112033195,
+              "n": 241
+            }
+          },
+          "false_positive_items_per_doc": 1.12,
+          "errors": 0
+        }
+      },
+      "mean_input_tokens": 517.0983333333334,
+      "mean_output_tokens": 249.60666666666665,
+      "latency_p50": 4.928928678499915,
+      "latency_p95": 6.516382886250244,
+      "docs_per_hour": 42089.58024136466,
+      "pricing": "gpu",
+      "cost_per_1k": 0.08363115003320051
+    },
+    "qwen3-8b-ft": {
+      "label": "qwen3-8b-ft",
+      "splits": {
+        "test_id": {
+          "n": 300,
+          "valid_json": 1.0,
+          "exact_match": 0.9966666666666667,
+          "field_accuracy": {
+            "age": 1.0,
+            "sex": 1.0,
+            "chief_complaint": 1.0,
+            "smoking_status": 1.0,
+            "follow_up_weeks": 1.0,
+            "bp_systolic": 1.0,
+            "bp_diastolic": 1.0,
+            "heart_rate": 1.0,
+            "temperature_f": 1.0,
+            "spo2": 1.0,
+            "diagnoses": 0.9966666666666667,
+            "medications": 1.0,
+            "allergies": 1.0
+          },
+          "list_f1": {
+            "diagnoses": {
+              "precision": 0.998330550918197,
+              "recall": 1.0,
+              "f1": 0.9991645781119466
+            },
+            "medications": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "allergies": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "mean_field_accuracy": 0.9997435897435897,
+          "recall_by_vocab": {
+            "icd10_seen": {
+              "recall": 1.0,
+              "n": 598
+            },
+            "meds_seen": {
+              "recall": 1.0,
+              "n": 594
+            }
+          },
+          "false_positive_items_per_doc": 0.0033333333333333335,
+          "errors": 0
+        },
+        "test_ood": {
+          "n": 300,
+          "valid_json": 1.0,
+          "exact_match": 0.15666666666666668,
+          "field_accuracy": {
+            "age": 1.0,
+            "sex": 1.0,
+            "chief_complaint": 1.0,
+            "smoking_status": 1.0,
+            "follow_up_weeks": 1.0,
+            "bp_systolic": 1.0,
+            "bp_diastolic": 1.0,
+            "heart_rate": 1.0,
+            "temperature_f": 0.31666666666666665,
+            "spo2": 1.0,
+            "diagnoses": 0.48,
+            "medications": 0.9966666666666667,
+            "allergies": 1.0
+          },
+          "list_f1": {
+            "diagnoses": {
+              "precision": 0.715927750410509,
+              "recall": 0.715927750410509,
+              "f1": 0.7159277504105089
+            },
+            "medications": {
+              "precision": 0.9984152139461173,
+              "recall": 0.9984152139461173,
+              "f1": 0.9984152139461173
+            },
+            "allergies": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "mean_field_accuracy": 0.9071794871794872,
+          "recall_by_vocab": {
+            "icd10_heldout": {
+              "recall": 0.3584905660377358,
+              "n": 265
+            },
+            "icd10_seen": {
+              "recall": 0.9912790697674418,
+              "n": 344
+            },
+            "meds_seen": {
+              "recall": 0.9974358974358974,
+              "n": 390
+            },
+            "meds_heldout": {
+              "recall": 1.0,
+              "n": 241
+            }
+          },
+          "false_positive_items_per_doc": 0.58,
+          "errors": 0
+        }
+      },
+      "mean_input_tokens": 517.0983333333334,
+      "mean_output_tokens": 175.49833333333333,
+      "latency_p50": 3.628608513500012,
+      "latency_p95": 4.8488568258502704,
+      "docs_per_hour": 57250.97753185644,
+      "pricing": "gpu",
+      "cost_per_1k": 0.061483666336375635
+    },
+    "sonnet-5.5": {
+      "label": "sonnet-5.5",
+      "splits": {
+        "test_id": {
+          "n": 300,
+          "valid_json": 1.0,
+          "exact_match": 0.93,
+          "field_accuracy": {
+            "age": 1.0,
+            "sex": 1.0,
+            "chief_complaint": 0.9933333333333333,
+            "smoking_status": 1.0,
+            "follow_up_weeks": 1.0,
+            "bp_systolic": 1.0,
+            "bp_diastolic": 1.0,
+            "heart_rate": 1.0,
+            "temperature_f": 1.0,
+            "spo2": 1.0,
+            "diagnoses": 0.9366666666666666,
+            "medications": 1.0,
+            "allergies": 1.0
+          },
+          "list_f1": {
+            "diagnoses": {
+              "precision": 0.9682804674457429,
+              "recall": 0.9698996655518395,
+              "f1": 0.9690893901420218
+            },
+            "medications": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "allergies": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "mean_field_accuracy": 0.9946153846153846,
+          "recall_by_vocab": {
+            "icd10_seen": {
+              "recall": 0.9698996655518395,
+              "n": 598
+            },
+            "meds_seen": {
+              "recall": 1.0,
+              "n": 594
+            }
+          },
+          "false_positive_items_per_doc": 0.06333333333333334,
+          "errors": 0
+        },
+        "test_ood": {
+          "n": 300,
+          "valid_json": 0.9966666666666667,
+          "exact_match": 0.9733333333333334,
+          "field_accuracy": {
+            "age": 0.9966666666666667,
+            "sex": 0.9966666666666667,
+            "chief_complaint": 0.9966666666666667,
+            "smoking_status": 0.9966666666666667,
+            "follow_up_weeks": 0.9966666666666667,
+            "bp_systolic": 0.9966666666666667,
+            "bp_diastolic": 0.9966666666666667,
+            "heart_rate": 0.9966666666666667,
+            "temperature_f": 0.9966666666666667,
+            "spo2": 0.9966666666666667,
+            "diagnoses": 0.9733333333333334,
+            "medications": 0.9966666666666667,
+            "allergies": 0.9966666666666667
+          },
+          "list_f1": {
+            "diagnoses": {
+              "precision": 0.9884488448844885,
+              "recall": 0.9835796387520526,
+              "f1": 0.9860082304526749
+            },
+            "medications": {
+              "precision": 1.0,
+              "recall": 0.993660855784469,
+              "f1": 0.9968203497615262
+            },
+            "allergies": {
+              "precision": 1.0,
+              "recall": 0.9928057553956835,
+              "f1": 0.996389891696751
+            }
+          },
+          "mean_field_accuracy": 0.9948717948717949,
+          "recall_by_vocab": {
+            "icd10_heldout": {
+              "recall": 1.0,
+              "n": 265
+            },
+            "icd10_seen": {
+              "recall": 0.9709302325581395,
+              "n": 344
+            },
+            "meds_seen": {
+              "recall": 0.9897435897435898,
+              "n": 390
+            },
+            "meds_heldout": {
+              "recall": 1.0,
+              "n": 241
+            }
+          },
+          "false_positive_items_per_doc": 0.023333333333333334,
+          "errors": 0
+        }
+      },
+      "mean_input_tokens": 727.665,
+      "mean_output_tokens": 353.535,
+      "latency_p50": 2.4830944225000167,
+      "latency_p95": 4.12979351920037,
+      "docs_per_hour": 10644.169402036301,
+      "pricing": "api:claude-sonnet-5-5",
+      "cost_per_1k": 4.99068
+    }
+  },
+  "break_even": [
+    {
+      "selfhost": "qwen3-8b-base",
+      "api": "haiku-5.5",
+      "docs_per_day": 220432.11874976676
+    },
+    {
+      "selfhost": "qwen3-8b-base",
+      "api": "sonnet-5.5",
+      "docs_per_day": 16962.8186940457
+    },
+    {
+      "selfhost": "qwen3-8b-ft",
+      "api": "haiku-5.5",
+      "docs_per_day": 220432.11874976676
+    },
+    {
+      "selfhost": "qwen3-8b-ft",
+      "api": "sonnet-5.5",
+      "docs_per_day": 16962.8186940457
+    }
+  ],
+  "assumptions": {
+    "gpu_hourly_usd": 3.52,
+    "train_hours": 1.5,
+    "train_cost_usd": 5.28,
+    "amortize_days": 30,
+    "api_batch_pricing": false,
+    "api_prices_per_mtok": {
+      "claude-haiku-5-5": [
+        0.1,
+        0.5
+      ],
+      "claude-sonnet-5-5": [
+        2.0,
+        10.0
+      ]
+    }
+  }
+}

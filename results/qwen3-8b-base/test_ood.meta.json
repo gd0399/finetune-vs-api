@@ -1,0 +1,1 @@
+{"label": "qwen3-8b-base", "spec": "openai:qwen3-8b-base@http://localhost:8000/v1", "split": "test_ood", "n": 300, "workers": 64, "wall_s": 25.791192108999894, "docs_per_hour": 41874.76078793316}
